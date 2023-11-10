@@ -18,13 +18,17 @@ import com.google.firebase.ktx.initialize
 import dk.sdu.weshareclone.ui.theme.WeShareCloneTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val currentUser = Firebase.auth.currentUser
+
         setContent {
             WeShareCloneTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
+                    Greeting("Android ${currentUser?.email}")
                 }
             }
         }
