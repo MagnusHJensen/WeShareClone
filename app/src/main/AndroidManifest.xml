@@ -25,8 +25,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.WeShareClone">
-        </activity>
+            android:theme="@style/Theme.WeShareClone" />
+        <activity
+            android:name=".PickNameActivity"
+            android:exported="true"
+            android:theme="@style/Theme.WeShareClone" />
     </application>
 
 </manifest>

@@ -7,89 +7,71 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dk.sdu.weshareclone.model.ProfileModel
 import dk.sdu.weshareclone.ui.theme.WeShareCloneTheme
 
-class MainActivity : ComponentActivity() {
-    private lateinit var auth: FirebaseAuth
-
+class PickNameActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
+
         setContent {
             WeShareCloneTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    LandingPage()
+                    PickNameForm()
                 }
             }
         }
     }
 
     @Composable
-    fun LandingPage() {
-        var profile by remember {
-            mutableStateOf<ProfileModel?>(null)
+    fun PickNameForm() {
+        var name by remember {
+            mutableStateOf("")
         }
 
-        Firebase.firestore.document("profiles/${Firebase.auth.currentUser!!.uid}").get()
-            .addOnSuccessListener {
-                profile = it.toObject(ProfileModel::class.java)
-            }
-
-
-        Firebase.auth.addAuthStateListener {
-            if (it.currentUser == null) {
-                this.startActivity(Intent(this@MainActivity, EmailPasswordActivity::class.java))
-            }
+        fun pickName() {
+            Firebase.firestore.document("profiles/${Firebase.auth.currentUser?.uid}").set(
+                ProfileModel(name, docId = Firebase.auth.currentUser!!.uid)
+            )
+                .addOnCompleteListener(this) {
+                    if (it.isSuccessful) {
+                        startActivity(Intent(this@PickNameActivity, MainActivity::class.java))
+                    }
+                }
         }
 
         Column {
-            Greeting("Android ${profile?.name}")
-            Button(onClick = { signOut() }) {
-                Text("Sign out")
+            NameInput(name = name, onNameChange = {name = it} )
+            Button(onClick = { pickName() }, enabled = name.isNotEmpty()) {
+                Text("Continue")
             }
         }
-
     }
 
-
 }
 
 
 
-fun signOut() {
-    Firebase.auth.signOut()
-}
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-            text = "Hello $name!",
-            modifier = modifier
-    )
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WeShareCloneTheme {
-        Greeting("Android")
-    }
+fun NameInput(name: String, onNameChange: (String) -> Unit) {
+    Text("Pick your name")
+    TextField(value = name, onValueChange = onNameChange)
 }
