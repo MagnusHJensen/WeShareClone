@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "144594200865",
+    "project_id": "we-share-clone-58db0",
+    "storage_bucket": "we-share-clone-58db0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144594200865:android:dd9e3df2db6bcd8032f660",
+        "android_client_info": {
+          "package_name": "dk.sdu.weshareclone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdWcouODU9sacQHy-wRjmlX4SLGQPLgzU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
