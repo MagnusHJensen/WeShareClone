@@ -17,15 +17,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import dk.sdu.weshareclone.model.ProfileModel
+import dk.sdu.weshareclone.route.Screen
+import dk.sdu.weshareclone.screens.HomeScreen
+import dk.sdu.weshareclone.screens.LoginSceen
 import dk.sdu.weshareclone.ui.theme.WeShareCloneTheme
 
 class MainActivity : ComponentActivity() {
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,61 +40,28 @@ class MainActivity : ComponentActivity() {
             WeShareCloneTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    LandingPage()
+                    Navigation()
                 }
             }
         }
     }
 
     @Composable
-    fun LandingPage() {
-        var profile by remember {
-            mutableStateOf<ProfileModel?>(null)
-        }
+    fun Navigation() {
 
-        Firebase.firestore.document("profiles/${Firebase.auth.currentUser!!.uid}").get()
-            .addOnSuccessListener {
-                profile = it.toObject(ProfileModel::class.java)
-            }
+        val navigation = rememberNavController();
 
-
-        Firebase.auth.addAuthStateListener {
-            if (it.currentUser == null) {
-                this.startActivity(Intent(this@MainActivity, EmailPasswordActivity::class.java))
-            }
-        }
 
         Column {
-            Greeting("Android ${profile?.name}")
-            Button(onClick = { signOut() }) {
-                Text("Sign out")
+            NavHost(
+                navController = navigation,
+                startDestination = Screen.LoginScreen.route
+            ){
+                composable(Screen.LoginScreen.route) { LoginSceen(navigation = navigation) }
+                composable(Screen.HomeScreen.route) { HomeScreen(navigation = navigation)}
             }
+
         }
 
-    }
-
-
-}
-
-
-
-fun signOut() {
-    Firebase.auth.signOut()
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-            text = "Hello $name!",
-            modifier = modifier
-    )
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WeShareCloneTheme {
-        Greeting("Android")
     }
 }
