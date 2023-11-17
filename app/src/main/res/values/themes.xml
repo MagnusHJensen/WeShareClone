@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.WeShareClone" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.WeShareClone" parent="Theme.MaterialComponents.Light.NoActionBar" />
+
+    <style name="Theme.WeShareClone.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.WeShareClone.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

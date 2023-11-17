@@ -14,7 +14,7 @@
         android:theme="@style/Theme.WeShareClone"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".WeShareActivity"
             android:exported="true"
             android:theme="@style/Theme.WeShareClone">
             <intent-filter>
