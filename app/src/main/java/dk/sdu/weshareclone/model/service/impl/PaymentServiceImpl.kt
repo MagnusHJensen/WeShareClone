@@ -18,10 +18,9 @@ class PaymentServiceImpl @Inject constructor(private val auth: AccountService, p
         get() = auth.currentUserId
     override val ownedPayments: Flow<List<Payment>>
         get() =
-            auth.currentUser.flatMapLatest { user ->
+            auth.currentUser.flatMapLatest {
                 val document = firestore.collection(PAYMENTS_COLLECTION)
                     .whereEqualTo(OWNER_ID_FIELD, requestUserId)
-                    .orderBy(CREATED_AT_FIELD)
                 document.addSnapshotListener { snapshot, e ->
                     snapshot?.toObjects(Payment::class.java)
                 }
