@@ -10,6 +10,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dk.sdu.weshareclone.HOME_SCREEN
+import dk.sdu.weshareclone.PAYMENT_SCREEN
 import dk.sdu.weshareclone.PICK_NAME_SCREEN
 import dk.sdu.weshareclone.model.Profile
 import kotlinx.coroutines.flow.observeOn
@@ -17,7 +19,8 @@ import kotlinx.coroutines.flow.observeOn
 @Composable
 fun HomeScreen(
     restartApp: (String) -> Unit,
-    viewModel: HomeScreenViewModel = hiltViewModel()
+    viewModel: HomeScreenViewModel = hiltViewModel(),
+    openAndPopUp: (String, String) -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsState(initial = HomeScreenUiState())
@@ -25,7 +28,7 @@ fun HomeScreen(
     HomeScreenContent(
         uiState,
         onSignOutClick = { viewModel.onSignOutClick(restartApp) },
-        updateName = viewModel::updateName
+        createPayment = {openAndPopUp(PAYMENT_SCREEN, HOME_SCREEN)}
     )
 
 }
@@ -34,7 +37,7 @@ fun HomeScreen(
 fun HomeScreenContent(
     uiState: HomeScreenUiState,
     onSignOutClick: () -> Unit,
-    updateName: () -> Unit
+    createPayment: () -> Unit
 ) {
     Column {
 
@@ -42,8 +45,8 @@ fun HomeScreenContent(
             Button(onClick = onSignOutClick) {
                 Text(text = "Sign out")
             }
-            Button(onClick = updateName) {
-                Text(text = "Update name")
+            Button(onClick = createPayment) {
+                Text(text = "Create payment")
             }
 
     }

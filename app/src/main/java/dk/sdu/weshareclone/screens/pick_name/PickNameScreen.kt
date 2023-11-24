@@ -23,7 +23,6 @@ fun PickNameScreen(openAndPopUp: (String, String) -> Unit, viewModel: PickNameVi
         onNameChange = viewModel::onNameChange,
         onPickName = { viewModel.onPickName(openAndPopUp)}
     )
-
 }
 
 @Composable

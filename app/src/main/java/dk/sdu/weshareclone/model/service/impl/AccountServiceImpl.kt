@@ -2,19 +2,15 @@ package dk.sdu.weshareclone.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
-import dk.sdu.weshareclone.model.Profile
 import dk.sdu.weshareclone.model.User
 import dk.sdu.weshareclone.model.service.AccountService
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth, private val firestore: FirebaseFirestore) : AccountService {
+class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
 
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
