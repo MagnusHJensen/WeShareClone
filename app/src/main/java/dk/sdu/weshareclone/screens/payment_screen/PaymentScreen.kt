@@ -26,7 +26,7 @@ fun PaymentContent(
     Column {
         Text(text = "Requested amount")
         TextField(value = uiState.amount.toString(), onValueChange = onAmountChange, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
-        Button(onClick = onCreatePayment, enabled = uiState.amount > 0) {
+        Button(onClick = onCreatePayment, enabled = uiState.amount != "0") {
             Text(text = "Create payment")
         }
     }

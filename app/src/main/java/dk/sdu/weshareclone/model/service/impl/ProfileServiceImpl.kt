@@ -36,7 +36,7 @@ class ProfileServiceImpl @Inject constructor(private val firestore: FirebaseFire
     override suspend fun updateName(newName: String) {
         var currentProfile = profile.first()
         currentProfile =
-            currentProfile?.copy(name = newName) ?: Profile(accountService.currentUserId, newName)
+            currentProfile?.copy(name = newName) ?: Profile(accountService. currentUserId, newName)
 
         firestore.collection(PROFILE_COLLECTION).document(currentProfile.id).set(currentProfile).await()
     }
