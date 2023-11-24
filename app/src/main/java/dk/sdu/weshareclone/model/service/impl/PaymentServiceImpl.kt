@@ -17,11 +17,12 @@ class PaymentServiceImpl @Inject constructor(private val auth: FirebaseAuth, pri
     override val requestedUserIds: Map<String, Int>
         get() = TODO("Not yet implemented")
 
-    override suspend fun createPayment(totalAmount: String) {
+    override suspend fun createPayment(totalAmount: Int) {
         val paymentId = UUID.randomUUID()
         val requestedUsers = HashMap<String, Int>()
-        requestedUsers.put("Tommy", 100)
-        val payment = Payment(paymentId, totalAmount, requestedUsers)
+        requestedUsers["Tommy"] = 100
+        Log.d("APP", requestUserId)
+        val payment = Payment(paymentId.toString(), amount = totalAmount, owner = requestUserId, requestedUsers = requestedUsers)
 
 
         firestore.collection("payments").document(paymentId.toString())

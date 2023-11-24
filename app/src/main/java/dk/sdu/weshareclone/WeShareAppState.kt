@@ -1,7 +1,6 @@
 package dk.sdu.weshareclone
 
 import androidx.compose.runtime.Stable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
 @Stable
@@ -22,7 +21,7 @@ class WeShareAppState(
     fun navigateAndPopUp(route: String, popUp: String) {
         navController.navigate(route) {
             launchSingleTop = true
-            popUpTo(popUp) { inclusive = true }
+            popUpTo(popUp) { inclusive = false }
         }
     }
 

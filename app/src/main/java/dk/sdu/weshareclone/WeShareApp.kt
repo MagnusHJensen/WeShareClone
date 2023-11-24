@@ -52,6 +52,6 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
     }
     
     composable(PAYMENT_SCREEN) {
-        PaymentScreen(openAndPopUp = {route, popUp -> appState.navigateAndPopUp(route, popUp)})
+        PaymentScreen(popUp = {appState.popUp()})
     }
 }

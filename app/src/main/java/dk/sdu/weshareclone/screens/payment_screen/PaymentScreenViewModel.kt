@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dk.sdu.weshareclone.model.service.impl.PaymentServiceImpl
 import dk.sdu.weshareclone.screens.WeShareViewModel
+import java.lang.Integer.parseInt
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,12 +17,17 @@ class PaymentScreenViewModel @Inject constructor(private val paymentService: Pay
         get() = uiState.value.amount
 
     fun onAmountChange(setAmount: String) {
-        uiState.value = uiState.value.copy(amount = setAmount)
+        try {
+            uiState.value = uiState.value.copy(amount = parseInt(setAmount))
+        } catch (e: NumberFormatException) {
+            return // Since the number inputted was invalid.
+        }
     }
 
-    fun onCreatePayment() {
+    fun onCreatePayment(popUp: () -> Unit) {
         launchCatching {
-            paymentService.createPayment(uiState.value.amount)
+            paymentService.createPayment(requestedAmount)
+            popUp()
         }
     }
 }

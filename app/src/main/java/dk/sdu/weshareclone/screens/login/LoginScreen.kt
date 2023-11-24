@@ -1,4 +1,3 @@
-
 package dk.sdu.weshareclone.screens.login
 
 import android.util.Log
@@ -22,7 +21,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 
 @Composable
-fun LoginSceen(openAndPopUp: (String, String) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginSceen(
+    openAndPopUp: (String, String) -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState
 
     LoginScreenContent(
@@ -31,9 +33,8 @@ fun LoginSceen(openAndPopUp: (String, String) -> Unit, viewModel: LoginViewModel
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onSignInClick = {
-        Log.d("APP", "In screen on sign in")
             viewModel.onSignInClick(openAndPopUp)
-                        },
+        },
         onCreateClick = { viewModel.onCreateClick(openAndPopUp) },
     )
 }
@@ -95,9 +96,15 @@ fun PasswordInput(password: String, onPasswordChange: (String) -> Unit) {
 
     Column {
         Text(text = "Password")
-        TextField(value = password, isError = isError, onValueChange = {
-            onPasswordChange(it)
-            validate(password)
-        }, singleLine = true, modifier = Modifier.border(border = BorderStroke(width = Dp(1.0F), color = Color.Black)))
+        TextField(
+            value = password,
+            isError = isError,
+            onValueChange = {
+                onPasswordChange(it)
+                validate(password)
+            },
+            singleLine = true,
+            modifier = Modifier.border(border = BorderStroke(width = Dp(1.0F), color = Color.Black))
+        )
     }
 }
