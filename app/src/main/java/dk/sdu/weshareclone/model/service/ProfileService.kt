@@ -7,5 +7,6 @@ interface ProfileService {
     val profile: Flow<Profile?>
 
     suspend fun updateName(name: String)
+    suspend fun createProfile(email: String)
     suspend fun getProfile(owner: String): Profile?
 }

@@ -6,11 +6,12 @@ import dk.sdu.weshareclone.HOME_SCREEN
 import dk.sdu.weshareclone.LOGIN_SCREEN
 import dk.sdu.weshareclone.PICK_NAME_SCREEN
 import dk.sdu.weshareclone.model.service.AccountService
+import dk.sdu.weshareclone.model.service.ProfileService
 import dk.sdu.weshareclone.screens.WeShareViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val accountService: AccountService) : WeShareViewModel() {
+class LoginViewModel @Inject constructor(private val accountService: AccountService, private val profileService: ProfileService) : WeShareViewModel() {
     var uiState = mutableStateOf(LoginUiState())
         private set
 
@@ -41,6 +42,7 @@ class LoginViewModel @Inject constructor(private val accountService: AccountServ
     fun onCreateClick(openAndPopUp: (String, String) -> Unit) {
         launchCatching {
             accountService.createAccount(email, password)
+            profileService.createProfile(email)
             openAndPopUp(PICK_NAME_SCREEN, LOGIN_SCREEN)
         }
     }
