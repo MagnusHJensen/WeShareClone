@@ -1,6 +1,8 @@
 package dk.sdu.weshareclone.screens.home_screen
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dk.sdu.weshareclone.GROUP_SCREEN
+import dk.sdu.weshareclone.HOME_SCREEN
 import dk.sdu.weshareclone.LOGIN_SCREEN
 import dk.sdu.weshareclone.model.Group
 import dk.sdu.weshareclone.model.service.AccountService
@@ -40,5 +42,8 @@ class HomeScreenViewModel @Inject constructor(
             accountService.signOut()
             restartApp(LOGIN_SCREEN)
         }
+    }
+    fun onInspectGroup(group: Group, openAndPopUp: (String, String) -> Unit) {
+        openAndPopUp(GROUP_SCREEN, HOME_SCREEN)
     }
 }

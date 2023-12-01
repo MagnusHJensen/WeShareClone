@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dk.sdu.weshareclone.screens.group_screen.GroupScreen
 import dk.sdu.weshareclone.screens.home_screen.HomeScreen
 import dk.sdu.weshareclone.screens.login.LoginSceen
 import dk.sdu.weshareclone.screens.payment_screen.PaymentScreen
@@ -44,7 +45,8 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
     }
 
     composable(HOME_SCREEN) {
-        HomeScreen(restartApp = { route -> appState.clearAndNavigate(route) },openAndPopUp = {route, popUp -> appState.navigateAndPopUp(route, popUp)})
+        HomeScreen(restartApp = { route -> appState.clearAndNavigate(route) },openAndPopUp = {route, popUp -> appState.navigateAndPopUp(route, popUp)}, viewGroup = {groupId -> appState.navigateAndPopUp(
+            replaceParameter(GROUP_SCREEN, "groupId", groupId), HOME_SCREEN)})
     }
 
     composable(PICK_NAME_SCREEN) {
@@ -53,5 +55,9 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
     
     composable(PAYMENT_SCREEN) {
         PaymentScreen(popUp = {appState.popUp()})
+    }
+
+    composable(GROUP_SCREEN) {
+        GroupScreen(popUp = { appState.popUp()}, groupId = it.arguments?.getString("groupId"))
     }
 }

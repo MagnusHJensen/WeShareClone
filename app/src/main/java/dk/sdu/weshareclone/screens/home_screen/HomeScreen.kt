@@ -28,7 +28,8 @@ import kotlin.random.Random
 fun HomeScreen(
     restartApp: (String) -> Unit,
     viewModel: HomeScreenViewModel = hiltViewModel(),
-    openAndPopUp: (String, String) -> Unit
+    openAndPopUp: (String, String) -> Unit,
+    viewGroup: (String) -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsState(initial = HomeScreenUiState())
@@ -37,7 +38,8 @@ fun HomeScreen(
         uiState,
         groups = viewModel.groups,
         onSignOutClick = { viewModel.onSignOutClick(restartApp) },
-        createGroup = viewModel::createGroup
+        createGroup = viewModel::createGroup,
+        viewGroup = viewGroup
     )
 
 }
@@ -47,7 +49,8 @@ fun HomeScreenContent(
     uiState: HomeScreenUiState,
     groups: List<Group>,
     onSignOutClick: () -> Unit,
-    createGroup: () -> Unit
+    createGroup: () -> Unit,
+    viewGroup: (String) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -57,7 +60,9 @@ fun HomeScreenContent(
         Text(text = "Hello ${uiState.name}")
         LazyColumn {
             items(groups, key = { it.id }) { groupItem ->
-                Text(text = groupItem.name)
+                Button(onClick = {viewGroup(groupItem.id)}) {
+                    Text(text = groupItem.name)
+                }
                 /*Card(
                     modifier = Modifier
                         .width(380.dp)
@@ -108,6 +113,7 @@ fun HomeScreenContent(
             Button(onClick = createGroup) {
                 Text(text = "Create group")
             }
+            
         }
 
     }
@@ -146,6 +152,7 @@ fun HomeScreenPreview() {
             uiState = uiState,
             groups = groups,
             onSignOutClick = {},
-            createGroup = {})
+            createGroup = {},
+            viewGroup = {})
     }
 }

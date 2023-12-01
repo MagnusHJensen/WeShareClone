@@ -9,4 +9,5 @@ interface GroupService {
     suspend fun listGroups(): List<Group>
     suspend fun fetchGroupMembers(groupId: String): List<Profile>
     suspend fun leaveGroup()
+    suspend fun fetchGroup(groupId: String): Group
 }

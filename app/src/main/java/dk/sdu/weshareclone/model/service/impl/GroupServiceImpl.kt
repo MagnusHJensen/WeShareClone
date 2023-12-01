@@ -28,9 +28,7 @@ class GroupServiceImpl @Inject constructor(private val firestore: FirebaseFirest
     }
 
     override suspend fun fetchGroupMembers(groupId: String): List<Profile> {
-        val result = firestore.collection(GROUP_COLLECTION).document(groupId).get().await()
-        if (!result.exists()) throw Exception("Group does not exist")
-        val group = result.toObject(Group::class.java)
+        val group = fetchGroup(groupId)
         val profiles = mutableListOf<Profile>()
         group?.memberIds?.forEach { memberId ->
             profileService.getProfile(memberId)?.let {
@@ -44,6 +42,15 @@ class GroupServiceImpl @Inject constructor(private val firestore: FirebaseFirest
 
     override suspend fun leaveGroup() {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchGroup(groupId: String): Group {
+        return firestore
+            .collection(GROUP_COLLECTION)
+            .document(groupId)
+            .get()
+            .await()
+            .toObject(Group::class.java) ?: throw Exception("Group does not exist")
     }
 
     companion object {
