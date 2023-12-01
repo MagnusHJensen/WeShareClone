@@ -29,10 +29,9 @@ class PaymentServiceImpl @Inject constructor(private val auth: AccountService, p
             }
 
 
-    override suspend fun createPayment(totalAmount: String) {
+    override suspend fun createPayment(totalAmount: String, requestedUsers: Map<String, Int>) {
         val paymentId = UUID.randomUUID()
-        val requestedUsers = HashMap<String, Int>()
-        requestedUsers["Tommy"] = 100
+
         Log.d("APP", requestUserId)
         val payment = Payment(paymentId.toString(), amount = totalAmount, owner = requestUserId, requestedUsers = requestedUsers)
 

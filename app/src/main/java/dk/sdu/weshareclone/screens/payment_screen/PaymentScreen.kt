@@ -14,18 +14,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun PaymentScreen(popUp: () -> Unit, viewModel: PaymentScreenViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState
-    PaymentContent(uiState = uiState, onAmountChange = viewModel::onAmountChange, onCreatePayment = {viewModel.onCreatePayment(popUp)})
+    PaymentContent(uiState = uiState, onAmountChange = viewModel::onAmountChange, onCreatePayment = {viewModel.onCreatePayment(popUp)}, onReqUserChange = viewModel::onReqUserChange, onReqUserPercentChange = viewModel::onReqUserPercentChange)
 }
 
 @Composable
 fun PaymentContent(
     uiState: PaymentUiState,
     onAmountChange: (String) -> Unit,
+    onReqUserChange: (String) -> Unit,
+    onReqUserPercentChange: (String) -> Unit,
     onCreatePayment: () -> Unit
 ) {
     Column {
         Text(text = "Requested amount")
-        TextField(value = uiState.amount.toString(), onValueChange = onAmountChange, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+        TextField(value = uiState.amount, onValueChange = onAmountChange, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+        TextField(value = uiState.requestedUsers, onValueChange = onReqUserChange, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text))
+        TextField(value = uiState.requestedUsersPercent, onValueChange = onReqUserPercentChange, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text))
         Button(onClick = onCreatePayment, enabled = uiState.amount != "0") {
             Text(text = "Create payment")
         }

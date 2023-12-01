@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface PaymentService {
     val requestUserId: String
     val ownedPayments: Flow<List<Payment>>
-    suspend fun createPayment(totalAmount: String)
+    suspend fun createPayment(totalAmount: String, requestedUsers: Map<String, Int>)
     suspend fun createNotification(requestedUsers: Map<String, Int>)
 }
