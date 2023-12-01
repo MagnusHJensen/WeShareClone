@@ -64,12 +64,14 @@ fun HomeScreenContent(
                         .height(100.dp)
 
                 ) {
+
                     Column(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Row {
                             Text(text = "Total: ")
                             Text(text = paymentItem.payment.amount)
+                            Text(text = paymentItem.payment.requestedUsers.entries.toString())
                         }
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween
