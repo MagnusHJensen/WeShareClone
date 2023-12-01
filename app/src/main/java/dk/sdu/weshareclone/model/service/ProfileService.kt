@@ -8,5 +8,5 @@ interface ProfileService {
 
     suspend fun updateName(name: String)
     suspend fun createProfile(email: String)
-    suspend fun getProfile(owner: String): Profile?
+    suspend fun getProfile(profileId: String): Profile?
 }

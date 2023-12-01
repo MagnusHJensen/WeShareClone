@@ -45,8 +45,8 @@ class ProfileServiceImpl @Inject constructor(private val firestore: FirebaseFire
         firestore.collection(PROFILE_COLLECTION).document(accountService.currentUserId).set(Profile(id = accountService.currentUserId, email = email)).await()
     }
 
-    override suspend fun getProfile(owner: String): Profile? {
-        return firestore.collection(PROFILE_COLLECTION).document(owner).get().await().toObject(Profile::class.java)
+    override suspend fun getProfile(profileId: String): Profile? {
+        return firestore.collection(PROFILE_COLLECTION).document(profileId).get().await().toObject(Profile::class.java)
     }
 
     companion object {
