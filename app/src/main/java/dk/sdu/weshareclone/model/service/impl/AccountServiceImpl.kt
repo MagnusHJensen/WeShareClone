@@ -1,7 +1,6 @@
 package dk.sdu.weshareclone.model.service.impl
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import dk.sdu.weshareclone.model.User
 import dk.sdu.weshareclone.model.service.AccountService
 import kotlinx.coroutines.channels.awaitClose
