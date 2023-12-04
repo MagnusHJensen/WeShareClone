@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dk.sdu.weshareclone.CREATE_GROUP_SCREEN
 import dk.sdu.weshareclone.GROUP_ID
 import dk.sdu.weshareclone.GROUP_SCREEN
+import dk.sdu.weshareclone.PROFILE_SCREEN
 import dk.sdu.weshareclone.model.Group
 import dk.sdu.weshareclone.ui.theme.WeShareTheme
 
@@ -28,6 +29,7 @@ fun HomeScreen(
     restartApp: (String) -> Unit,
     viewModel: HomeScreenViewModel = hiltViewModel(),
     openScreen: (String) -> Unit,
+    openAndPopUp: (String, String) -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsState(initial = HomeScreenUiState())
@@ -41,7 +43,8 @@ fun HomeScreen(
         uiState,
         groups = groups,
         onSignOutClick = { viewModel.onSignOutClick(restartApp) },
-        openScreen = openScreen
+        openScreen = openScreen,
+        onInspectProfile = { viewModel.onInspectProfile(openAndPopUp)}
     )
 
 }
@@ -51,7 +54,8 @@ fun HomeScreenContent(
     uiState: HomeScreenUiState,
     groups: List<Group>,
     onSignOutClick: () -> Unit,
-    openScreen: (String) -> Unit
+    openScreen: (String) -> Unit,
+    onInspectProfile: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,9 +80,10 @@ fun HomeScreenContent(
             Button(onClick = {openScreen(CREATE_GROUP_SCREEN)}) {
                 Text(text = "Create group")
             }
-            
+            Button(onClick = {openScreen(PROFILE_SCREEN)}) {
+                Text(text = "Profile")
+            }
         }
-
     }
 }
 
@@ -96,7 +101,7 @@ fun HomeScreenPreview() {
             uiState = uiState,
             groups = groups,
             onSignOutClick = {},
-            openScreen = {}
-        )
+            openScreen = {},
+            onInspectProfile = {})
     }
 }

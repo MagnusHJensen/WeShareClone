@@ -18,6 +18,7 @@ import dk.sdu.weshareclone.screens.home_screen.HomeScreen
 import dk.sdu.weshareclone.screens.login.LoginSceen
 import dk.sdu.weshareclone.screens.payment_screen.PaymentScreen
 import dk.sdu.weshareclone.screens.pick_name.PickNameScreen
+import dk.sdu.weshareclone.screens.profile_screen.ProfileScreen
 import dk.sdu.weshareclone.ui.theme.WeShareTheme
 
 @Composable
@@ -51,7 +52,8 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
     composable(HOME_SCREEN) {
         HomeScreen(
             restartApp = { route -> appState.clearAndNavigate(route) },
-            openScreen = { route -> appState.navigate(route) })
+            openScreen = { route -> appState.navigate(route) },
+            openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp)})
     }
 
     composable(PICK_NAME_SCREEN) {
@@ -84,6 +86,10 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
         })
     ) {
         AddGroupMemberScreen(popUp = { appState.popUp() })
+    }
+
+    composable(PROFILE_SCREEN) {
+        ProfileScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
     composable(

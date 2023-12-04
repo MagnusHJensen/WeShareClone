@@ -18,6 +18,7 @@ const val CREATE_EXPENSE_SCREEN = "CreateExpenseScreen"
 
 const val HOME_SCREEN = "HomeScreen"
 const val PAYMENT_SCREEN = "PaymentScreen"
+const val PROFILE_SCREEN = "ProfileScreen"
 
 
 

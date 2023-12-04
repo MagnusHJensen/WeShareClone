@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dk.sdu.weshareclone.GROUP_SCREEN
 import dk.sdu.weshareclone.HOME_SCREEN
 import dk.sdu.weshareclone.LOGIN_SCREEN
+import dk.sdu.weshareclone.PROFILE_SCREEN
 import dk.sdu.weshareclone.model.Group
 import dk.sdu.weshareclone.model.service.AccountService
 import dk.sdu.weshareclone.model.service.GroupService
@@ -37,6 +38,10 @@ class HomeScreenViewModel @Inject constructor(
         launchCatching {
             groups.value = groupService.listGroups()
         }
+    }
+
+    fun onInspectProfile(openAndPopUp: (String, String) -> Unit) {
+        launchCatching { openAndPopUp(PROFILE_SCREEN, HOME_SCREEN) }
     }
 
     fun onInspectGroup(group: Group, openAndPopUp: (String, String) -> Unit) {
