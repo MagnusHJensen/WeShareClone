@@ -22,6 +22,7 @@ class WeShareAppState(
         navController.navigate(route) {
             launchSingleTop = true
             popUpTo(popUp) { inclusive = false }
+
         }
     }
 

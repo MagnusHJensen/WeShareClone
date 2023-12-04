@@ -9,7 +9,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dk.sdu.weshareclone.screens.group_screen.GroupScreen
+import androidx.navigation.navArgument
+import dk.sdu.weshareclone.screens.create_expense_screen.CreateExpenseScreen
+import dk.sdu.weshareclone.screens.group.create_group.CreateGroupScreen
+import dk.sdu.weshareclone.screens.group.add_member.AddGroupMemberScreen
+import dk.sdu.weshareclone.screens.group.group_details.GroupScreen
 import dk.sdu.weshareclone.screens.home_screen.HomeScreen
 import dk.sdu.weshareclone.screens.login.LoginSceen
 import dk.sdu.weshareclone.screens.payment_screen.PaymentScreen
@@ -41,23 +45,54 @@ fun rememberAppState(
 
 fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
     composable(LOGIN_SCREEN) {
-        LoginSceen(openAndPopUp = {route, popUp -> appState.navigateAndPopUp(route, popUp)})
+        LoginSceen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
     composable(HOME_SCREEN) {
-        HomeScreen(restartApp = { route -> appState.clearAndNavigate(route) },openAndPopUp = {route, popUp -> appState.navigateAndPopUp(route, popUp)}, viewGroup = {groupId -> appState.navigateAndPopUp(
-            replaceParameter(GROUP_SCREEN, "groupId", groupId), HOME_SCREEN)})
+        HomeScreen(
+            restartApp = { route -> appState.clearAndNavigate(route) },
+            openScreen = { route -> appState.navigate(route) })
     }
 
     composable(PICK_NAME_SCREEN) {
-        PickNameScreen(openAndPopUp = {route, popUp -> appState.navigateAndPopUp(route, popUp)})
-    }
-    
-    composable(PAYMENT_SCREEN) {
-        PaymentScreen(popUp = {appState.popUp()})
+        PickNameScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
-    composable(GROUP_SCREEN) {
-        GroupScreen(popUp = { appState.popUp()}, groupId = it.arguments?.getString("groupId"))
+    composable(PAYMENT_SCREEN) {
+        PaymentScreen(popUp = { appState.popUp() })
+    }
+
+    composable(
+        route = "$GROUP_SCREEN$GROUP_ID_ARG",
+        arguments = listOf(navArgument(GROUP_ID) {
+            nullable = true
+            defaultValue = null
+        })
+    ) {
+        GroupScreen(popUp = { appState.popUp() }, openScreen = { route -> appState.navigate(route)})
+    }
+
+    composable(CREATE_GROUP_SCREEN) {
+        CreateGroupScreen(popUp = { appState.popUp() })
+    }
+    
+    composable(
+        route = "$ADD_GROUP_MEMBER_SCREEN$GROUP_ID_ARG",
+        arguments = listOf(navArgument(GROUP_ID) {
+            nullable = true
+            defaultValue = null
+        })
+    ) {
+        AddGroupMemberScreen(popUp = { appState.popUp() })
+    }
+
+    composable(
+        route = "$CREATE_EXPENSE_SCREEN$GROUP_ID_ARG",
+        arguments = listOf(navArgument(GROUP_ID) {
+            nullable = true
+            defaultValue = null
+        })
+    ) {
+        CreateExpenseScreen(popUp = { appState.popUp() })
     }
 }

@@ -1,5 +1,6 @@
 package dk.sdu.weshareclone.screens.home_screen
 
+import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dk.sdu.weshareclone.GROUP_SCREEN
 import dk.sdu.weshareclone.HOME_SCREEN
@@ -23,19 +24,7 @@ class HomeScreenViewModel @Inject constructor(
         if (it != null) HomeScreenUiState(it.name, isLoaded = true) else HomeScreenUiState()
     }
 
-    var groups = emptyList<Group>()
-
-    init {
-        launchCatching {
-            groups = groupService.listGroups()
-        }
-    }
-
-    fun createGroup() {
-        launchCatching {
-            groupService.createGroup("Boys", "This is my boys", listOf(accountService.currentUserId))
-        }
-    }
+    val groups = mutableStateOf(emptyList<Group>())
 
     fun onSignOutClick(restartApp: (String) -> Unit) {
         launchCatching {
@@ -43,6 +32,13 @@ class HomeScreenViewModel @Inject constructor(
             restartApp(LOGIN_SCREEN)
         }
     }
+
+    fun fetchGroups() {
+        launchCatching {
+            groups.value = groupService.listGroups()
+        }
+    }
+
     fun onInspectGroup(group: Group, openAndPopUp: (String, String) -> Unit) {
         openAndPopUp(GROUP_SCREEN, HOME_SCREEN)
     }

@@ -10,15 +10,25 @@ import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
 
-class GroupServiceImpl @Inject constructor(private val firestore: FirebaseFirestore, private val profileService: ProfileService, private val accountService: AccountService) : GroupService {
+class GroupServiceImpl @Inject constructor(
+    private val firestore: FirebaseFirestore,
+    private val profileService: ProfileService,
+    private val accountService: AccountService
+) : GroupService {
     override suspend fun createGroup(name: String, description: String?, members: List<String>?) {
         val id = UUID.randomUUID().toString()
-        val group = Group(id, name, description.orEmpty(), members.orEmpty())
+        val group = Group(
+            id = id,
+            name = name,
+            description = description.orEmpty(),
+            owner = accountService.currentUserId,
+            memberIds = members.orEmpty()
+        )
         firestore.collection(GROUP_COLLECTION).document(id).set(group).await()
     }
 
-    override suspend fun updateGroup() {
-        TODO("Not yet implemented")
+    override suspend fun updateGroup(group: Group) {
+        firestore.collection(GROUP_COLLECTION).document(group.id).set(group).await()
     }
 
     override suspend fun listGroups(): List<Group> {
@@ -30,10 +40,8 @@ class GroupServiceImpl @Inject constructor(private val firestore: FirebaseFirest
     override suspend fun fetchGroupMembers(groupId: String): List<Profile> {
         val group = fetchGroup(groupId)
         val profiles = mutableListOf<Profile>()
-        group?.memberIds?.forEach { memberId ->
-            profileService.getProfile(memberId)?.let {
-                profiles.add(it)
-            }
+        group.memberIds.forEach { memberId ->
+            profiles.add(profileService.getProfile(memberId))
         }
 
         return profiles
@@ -51,6 +59,17 @@ class GroupServiceImpl @Inject constructor(private val firestore: FirebaseFirest
             .get()
             .await()
             .toObject(Group::class.java) ?: throw Exception("Group does not exist")
+    }
+
+    override suspend fun inviteMember(groupId: String, email: String) {
+        val profile = profileService.getProfileByEmail(email)
+        val group = fetchGroup(groupId = groupId)
+        if (group.memberIds.contains(profile.id)) {
+            throw Exception("User is already a part of the group.")
+        }
+        group.addMember(profile.id)
+
+        updateGroup(group = group)
     }
 
     companion object {

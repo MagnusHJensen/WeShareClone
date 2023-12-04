@@ -6,5 +6,15 @@ data class Group(
     @DocumentId val id: String = "",
     val name: String = "",
     val description: String = "",
-    val memberIds: List<String> = emptyList()
-)
+    val owner: String = "",
+    var memberIds: List<String> = emptyList()
+) {
+
+    fun addMember(memberId: String) {
+        val newMemberIds = mutableListOf<String>()
+        newMemberIds.add(memberId)
+        newMemberIds.addAll(memberIds)
+
+        memberIds = newMemberIds
+    }
+}

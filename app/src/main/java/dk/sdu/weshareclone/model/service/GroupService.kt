@@ -5,9 +5,10 @@ import dk.sdu.weshareclone.model.Profile
 
 interface GroupService {
     suspend fun createGroup(name: String, description: String?, members: List<String>?)
-    suspend fun updateGroup()
     suspend fun listGroups(): List<Group>
-    suspend fun fetchGroupMembers(groupId: String): List<Profile>
-    suspend fun leaveGroup()
     suspend fun fetchGroup(groupId: String): Group
+    suspend fun updateGroup(group: Group)
+    suspend fun leaveGroup()
+    suspend fun fetchGroupMembers(groupId: String): List<Profile>
+    suspend fun inviteMember(groupId: String, email: String)
 }

@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class ProfileServiceImpl @Inject constructor(private val firestore: FirebaseFirestore, private val accountService: AccountService) : ProfileService {
+class ProfileServiceImpl @Inject constructor(
+    private val firestore: FirebaseFirestore,
+    private val accountService: AccountService
+) : ProfileService {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val profile: Flow<Profile?>
@@ -36,20 +39,35 @@ class ProfileServiceImpl @Inject constructor(private val firestore: FirebaseFire
     override suspend fun updateName(newName: String) {
         var currentProfile = profile.first()
         currentProfile =
-            currentProfile?.copy(name = newName) ?: Profile(accountService. currentUserId, newName)
+            currentProfile?.copy(name = newName) ?: Profile(accountService.currentUserId, newName)
 
-        firestore.collection(PROFILE_COLLECTION).document(currentProfile.id).set(currentProfile).await()
+        firestore.collection(PROFILE_COLLECTION).document(currentProfile.id).set(currentProfile)
+            .await()
     }
 
     override suspend fun createProfile(email: String) {
-        firestore.collection(PROFILE_COLLECTION).document(accountService.currentUserId).set(Profile(id = accountService.currentUserId, email = email)).await()
+        firestore.collection(PROFILE_COLLECTION).document(accountService.currentUserId)
+            .set(Profile(id = accountService.currentUserId, email = email)).await()
     }
 
-    override suspend fun getProfile(profileId: String): Profile? {
-        return firestore.collection(PROFILE_COLLECTION).document(profileId).get().await().toObject(Profile::class.java)
+    override suspend fun getProfile(profileId: String): Profile {
+        return firestore.collection(PROFILE_COLLECTION).document(profileId).get().await()
+            .toObject(Profile::class.java) ?: throw Exception("Can not fetch this profile")
+    }
+
+    override suspend fun getProfileByEmail(email: String): Profile {
+        val profiles = firestore.collection(PROFILE_COLLECTION).whereEqualTo(EMAIL_FIELD, email).limit(1).get().await()
+            .toObjects(Profile::class.java)
+
+        if (profiles.isEmpty()) {
+            throw Exception("No profile exists")
+        }
+
+        return profiles[0]
     }
 
     companion object {
         private const val PROFILE_COLLECTION = "profiles"
+        private const val EMAIL_FIELD = "email"
     }
 }
