@@ -64,11 +64,16 @@ class GroupServiceImpl @Inject constructor(
     override suspend fun inviteMember(groupId: String, email: String) {
         val profile = profileService.getProfileByEmail(email)
         val group = fetchGroup(groupId = groupId)
+
+        if (group.owner != accountService.currentUserId) {
+            throw Exception("Only the owner can invite other members")
+        }
+
         if (group.memberIds.contains(profile.id)) {
             throw Exception("User is already a part of the group.")
         }
-        group.addMember(profile.id)
 
+        group.addMember(profile.id)
         updateGroup(group = group)
     }
 

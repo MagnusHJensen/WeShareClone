@@ -39,12 +39,14 @@ fun GroupScreen(
     viewModel: GroupDetailsScreenViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState
-    GroupDetailsScreenContent(uiState = uiState, popUp = popUp, openScreen = openScreen)
+    val isOwner by viewModel.isOwner
+    GroupDetailsScreenContent(uiState = uiState, isOwner = isOwner, popUp = popUp, openScreen = openScreen)
 }
 
 @Composable
 fun GroupDetailsScreenContent(
     uiState: GroupDetailsScreenUiState,
+    isOwner: Boolean,
     popUp: () -> Unit,
     openScreen: (String) -> Unit
 ) {
@@ -69,8 +71,10 @@ fun GroupDetailsScreenContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = groupMember.name)
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(Icons.Filled.Delete, contentDescription = null)
+                        if (isOwner) {
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(Icons.Filled.Delete, contentDescription = null)
+                            }
                         }
                     }
                 }
@@ -81,8 +85,10 @@ fun GroupDetailsScreenContent(
             Button(onClick = { openScreen("$CREATE_EXPENSE_SCREEN?$GROUP_ID=${uiState.group?.id.orEmpty()}") }) {
                 Text(text = "Add expense")
             }
-            Button(onClick = { openScreen("$ADD_GROUP_MEMBER_SCREEN?$GROUP_ID=${uiState.group?.id.orEmpty()}") }) {
-                Text(text = "Add group member")
+            if (isOwner) {
+                Button(onClick = { openScreen("$ADD_GROUP_MEMBER_SCREEN?$GROUP_ID=${uiState.group?.id.orEmpty()}") }) {
+                    Text(text = "Add group member")
+                }
             }
         }
     }
@@ -93,9 +99,13 @@ fun GroupDetailsScreenContent(
 fun GroupDetailsScreenPreview() {
     WeShareTheme {
         GroupDetailsScreenContent(uiState = GroupDetailsScreenUiState(
-            group = Group(name = "Boys", description = "Amazing description", memberIds = emptyList()),
+            group = Group(
+                name = "Boys",
+                description = "Amazing description",
+                memberIds = emptyList()
+            ),
             groupMembers = listOf(Profile(name = "Homer")),
             amountOwed = 100
-        ), popUp = {}, openScreen = {})
+        ), isOwner = false, popUp = {}, openScreen = {})
     }
 }

@@ -1,6 +1,6 @@
 package dk.sdu.weshareclone.screens.group.group_details
 
-import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,16 +24,18 @@ class GroupDetailsScreenViewModel @Inject constructor(
     private val accountService: AccountService
 ) : WeShareViewModel() {
     val uiState = mutableStateOf(GroupDetailsScreenUiState())
+    val isOwner: MutableState<Boolean> = mutableStateOf(false)
 
     init {
         val groupId = savedStateHandle.get<String>(GROUP_ID)
-        Log.d("APP", "Got $groupId from routing")
         if (groupId != null) {
             launchCatching {
                 val group = groupService.fetchGroup(groupId)
                 val members = group.memberIds.map {
                     profileService.getProfile(it)
                 }
+
+                isOwner.value = group.owner == accountService.currentUserId
 
                 val expenseList = expenseService.listExpenses(groupId)
                 val moneyOwed = calculateMoneyOwed(expenseList);
