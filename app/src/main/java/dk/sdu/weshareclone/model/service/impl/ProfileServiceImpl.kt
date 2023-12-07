@@ -45,6 +45,14 @@ class ProfileServiceImpl @Inject constructor(
             .await()
     }
 
+    override suspend fun updateEmail(newEmail: String) {
+        var currentProfile = profile.first()
+        currentProfile =
+            currentProfile?.copy(email = newEmail) ?: Profile(accountService.currentUserId, newEmail)
+
+        firestore.collection(PROFILE_COLLECTION).document(currentProfile.id).set(currentProfile).await()
+    }
+
     override suspend fun createProfile(email: String) {
         firestore.collection(PROFILE_COLLECTION).document(accountService.currentUserId)
             .set(Profile(id = accountService.currentUserId, email = email)).await()
