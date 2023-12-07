@@ -12,18 +12,22 @@ class ProfileViewModel @Inject constructor(private val profileService: ProfileSe
     var uiState = mutableStateOf(ProfileUiState())
         private set
 
+    private val name
+        get() = uiState.value.name
 
     private val email
         get() = uiState.value.email
 
-    private val pass
-        get() = uiState.value.pass
-
     init {
-        launchCatching {
-        val currentUser = profileService.getProfile(accountService.currentUserId)
-            uiState.value = uiState.value.copy(currentUser.name, currentUser.email)
-             }
+        try {
+            launchCatching {
+                val currentUser = profileService.getProfile(accountService.currentUserId)
+                uiState.value = uiState.value.copy(currentUser.name, currentUser.email)
+            }
+        } catch (e: Exception) {
+            print(e.message)
+        }
+
     }
 
     fun onNameChange(newValue: String) {
@@ -32,5 +36,12 @@ class ProfileViewModel @Inject constructor(private val profileService: ProfileSe
 
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
+    }
+
+    fun onUpdateName() {
+        launchCatching { profileService.updateName(name) }
+    }
+    fun onUpdateEmail() {
+        launchCatching { profileService.updateEmail(email) }
     }
 }
