@@ -89,7 +89,7 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
     }
 
     composable(PROFILE_SCREEN) {
-        ProfileScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+        ProfileScreen(openScreen = { route -> appState.navigate(route) })
     }
 
     composable(
