@@ -42,11 +42,10 @@ fun HomeScreen(
     HomeScreenContent(
         uiState,
         groups = groups,
-        onSignOutClick = { viewModel.onSignOutClick(restartApp) },
         openScreen = openScreen,
+        onSignOutClick = { viewModel.onSignOutClick(restartApp) },
         onInspectProfile = { viewModel.onInspectProfile(openAndPopUp)}
     )
-
 }
 
 @Composable
