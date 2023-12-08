@@ -1,5 +1,10 @@
 package dk.sdu.weshareclone.model.service.impl
 
+import android.content.ContentValues.TAG
+import android.nfc.Tag
+import android.util.Log
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
 import dk.sdu.weshareclone.model.Profile
@@ -51,6 +56,8 @@ class ProfileServiceImpl @Inject constructor(
             currentProfile?.copy(email = newEmail) ?: Profile(accountService.currentUserId, newEmail)
 
         firestore.collection(PROFILE_COLLECTION).document(currentProfile.id).set(currentProfile).await()
+        //TODO: Make sure not include actual footage of the emails in the system.
+        // We are working with 2 different emails, an on display one and one for the firebase auth. IMPORTANT DISTINCTION
     }
 
     override suspend fun createProfile(email: String) {
