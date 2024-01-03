@@ -13,10 +13,11 @@ class ExpenseServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val accountService: AccountService
 ) : ExpenseService {
-    override suspend fun createExpense(amount: Int, people: List<String>, groupId: String) {
+    override suspend fun createExpense(reason:String, amount: Int, people: List<String>, groupId: String) {
         val expense = Expense(
             id = UUID.randomUUID().toString(),
             groupId = groupId,
+            reason = reason,
             amount = amount,
             creator = accountService.currentUserId,
             people = people

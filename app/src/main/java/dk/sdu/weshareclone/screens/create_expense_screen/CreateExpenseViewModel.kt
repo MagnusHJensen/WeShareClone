@@ -41,6 +41,10 @@ class CreateExpenseViewModel @Inject constructor(
         }
     }
 
+    fun onReasonChange(newReason: String) {
+        uiState.value = uiState.value.copy(reason = newReason)
+    }
+
     fun onAmountChange(newAmount: String) {
         uiState.value = uiState.value.copy(amount = newAmount)
     }
@@ -56,6 +60,7 @@ class CreateExpenseViewModel @Inject constructor(
             includedPeople.add(accountService.currentUserId) // Add back owner to internal list.
 
             expenseService.createExpense(
+                uiState.value.reason,
                 Integer.parseInt(uiState.value.amount),
                 includedPeople,
                 groupId

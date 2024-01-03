@@ -5,6 +5,7 @@ import dk.sdu.weshareclone.model.Profile
 
 
 data class CreateExpenseUiState(
+    val reason: String = "",
     val amount: String = "0",
     val groupName: String = "",
     val groupMembers: List<Profile> = emptyList(),
