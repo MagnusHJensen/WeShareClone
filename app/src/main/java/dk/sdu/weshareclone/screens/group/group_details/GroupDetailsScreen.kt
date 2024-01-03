@@ -13,6 +13,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
@@ -25,22 +26,25 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dk.sdu.weshareclone.ADD_GROUP_MEMBER_SCREEN
-import dk.sdu.weshareclone.CREATE_EXPENSE_SCREEN
 import dk.sdu.weshareclone.GROUP_ID
 import dk.sdu.weshareclone.model.Group
 import dk.sdu.weshareclone.model.Profile
 import dk.sdu.weshareclone.screens.group.group_details.components.BalanceSection
+import dk.sdu.weshareclone.screens.group.group_details.models.GroupExpense
 import dk.sdu.weshareclone.ui.theme.WeShareTheme
 
 @Composable
 fun GroupScreen(
     popUp: () -> Unit,
     openScreen: (String) -> Unit,
+    openAndPopUp: (String, String) -> Unit,
     viewModel: GroupDetailsScreenViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState
     val isOwner by viewModel.isOwner
-    GroupDetailsScreenContent(uiState = uiState, isOwner = isOwner, popUp = popUp, openScreen = openScreen)
+    GroupDetailsScreenContent(uiState = uiState, isOwner = isOwner, popUp = popUp, openScreen = openScreen, onCreateExpenseClick = {
+        viewModel.onCreateExpenseClick(openAndPopUp)
+    })
 }
 
 @Composable
@@ -48,7 +52,8 @@ fun GroupDetailsScreenContent(
     uiState: GroupDetailsScreenUiState,
     isOwner: Boolean,
     popUp: () -> Unit,
-    openScreen: (String) -> Unit
+    openScreen: (String) -> Unit,
+    onCreateExpenseClick: () -> Unit
 ) {
     Log.d("APP", uiState.group.toString())
     Column(
@@ -82,7 +87,7 @@ fun GroupDetailsScreenContent(
             }
         }
         Row {
-            Button(onClick = { openScreen("$CREATE_EXPENSE_SCREEN?$GROUP_ID=${uiState.group?.id.orEmpty()}") }) {
+            Button(onClick = onCreateExpenseClick, enabled = uiState.groupMembers.size > 1) {
                 Text(text = "Add expense")
             }
             if (isOwner) {
@@ -90,6 +95,43 @@ fun GroupDetailsScreenContent(
                     Text(text = "Add group member")
                 }
             }
+        }
+        Column {
+            Text(text = "Non paid expenses")
+            LazyColumn {
+                items(uiState.nonPaidExpenses, key = { it.id }) { expense ->
+                    ExpenseItem(expense = expense)
+                }
+            }
+        }
+
+        Column {
+            Text(text = "My expenses")
+            LazyColumn {
+                items(uiState.myExpenses, key = { it.id }) { expense ->
+                    ExpenseItem(expense = expense)
+                }
+            }
+        }
+
+        Column {
+            Text(text = "Paid expenses")
+            LazyColumn {
+                items(uiState.paidExpenses, key = { it.id }) { expense ->
+                    ExpenseItem(expense = expense)
+                }
+            }
+        }
+
+    }
+}
+
+@Composable
+fun ExpenseItem(expense: GroupExpense) {
+    TextButton(onClick = { /*TODO*/ }) {
+        Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth(0.8F)) {
+            Text(text = expense.creator.name)
+            Text(text = "Total: ${expense.amount}")
         }
     }
 }
@@ -106,6 +148,6 @@ fun GroupDetailsScreenPreview() {
             ),
             groupMembers = listOf(Profile(name = "Homer")),
             amountOwed = 100
-        ), isOwner = false, popUp = {}, openScreen = {})
+        ), isOwner = false, popUp = {}, openScreen = {}, onCreateExpenseClick = {})
     }
 }

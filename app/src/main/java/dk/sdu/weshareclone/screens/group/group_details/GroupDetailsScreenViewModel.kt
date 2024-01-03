@@ -13,6 +13,7 @@ import dk.sdu.weshareclone.model.service.ExpenseService
 import dk.sdu.weshareclone.model.service.GroupService
 import dk.sdu.weshareclone.model.service.ProfileService
 import dk.sdu.weshareclone.screens.WeShareViewModel
+import dk.sdu.weshareclone.screens.group.group_details.models.GroupExpense
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,9 +41,28 @@ class GroupDetailsScreenViewModel @Inject constructor(
                 val expenseList = expenseService.listExpenses(groupId)
                 val moneyOwed = calculateMoneyOwed(expenseList);
                 val moneyOws = calculateMoneyOws(expenseList);
+
+                val mappedExpenses: List<GroupExpense> = expenseList.map {
+                    GroupExpense(id = it.id, creator = profileService.getProfile(it.creator), amount = it.amount,
+                        paid = it.creator == accountService.currentUserId || it.peopleSplit[accountService.currentUserId] == true
+                    )
+                }
+
+                val myExpenses = mappedExpenses.filter {
+                    it.creator.id == accountService.currentUserId
+                }
+
+                val paidExpenses = mappedExpenses.filter { // Expenses paid by the user that is not their own.
+                    it.creator.id != accountService.currentUserId && it.paid
+                }
+
+                val nonPaidExpenses = mappedExpenses.filter {// Expenses not paid yet, that is not their own.
+                    it.creator.id != accountService.currentUserId && !it.paid
+                }
+
                 uiState.value = uiState.value.copy(
                     group = group, groupMembers = members, amountOwed = moneyOwed,
-                    amountOws = moneyOws
+                    amountOws = moneyOws, myExpenses = myExpenses, paidExpenses = paidExpenses, nonPaidExpenses = nonPaidExpenses
                 )
             }
         }

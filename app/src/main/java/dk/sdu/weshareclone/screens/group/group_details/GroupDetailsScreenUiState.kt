@@ -2,10 +2,14 @@ package dk.sdu.weshareclone.screens.group.group_details
 
 import dk.sdu.weshareclone.model.Group
 import dk.sdu.weshareclone.model.Profile
+import dk.sdu.weshareclone.screens.group.group_details.models.GroupExpense
 
 data class GroupDetailsScreenUiState(
     val group: Group? = null,
     val groupMembers: List<Profile> = emptyList(),
+    val myExpenses: List<GroupExpense> = emptyList(),
+    val nonPaidExpenses: List<GroupExpense> = emptyList(),
+    val paidExpenses: List<GroupExpense> = emptyList(),
     /**
      * The amount the person is owed from other group members
      */

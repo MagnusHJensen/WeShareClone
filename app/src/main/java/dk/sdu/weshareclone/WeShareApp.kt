@@ -11,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dk.sdu.weshareclone.screens.create_expense_screen.CreateExpenseScreen
-import dk.sdu.weshareclone.screens.group.create_group.CreateGroupScreen
 import dk.sdu.weshareclone.screens.group.add_member.AddGroupMemberScreen
+import dk.sdu.weshareclone.screens.group.create_group.CreateGroupScreen
 import dk.sdu.weshareclone.screens.group.group_details.GroupScreen
 import dk.sdu.weshareclone.screens.home_screen.HomeScreen
 import dk.sdu.weshareclone.screens.login.LoginSceen
@@ -71,7 +71,7 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
             defaultValue = null
         })
     ) {
-        GroupScreen(popUp = { appState.popUp() }, openScreen = { route -> appState.navigate(route)})
+        GroupScreen(popUp = { appState.popUp() }, openScreen = { route -> appState.navigate(route)}, openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp)})
     }
 
     composable(CREATE_GROUP_SCREEN) {
