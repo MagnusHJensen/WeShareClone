@@ -50,7 +50,11 @@ class CreateExpenseViewModel @Inject constructor(
     }
 
     fun onCheckPerson(profile: Profile) {
-        uiState.value.includedPeople.add(profile.id)
+        if (uiState.value.includedPeople.contains(profile.id)) {
+            uiState.value.includedPeople.remove(profile.id)
+        } else {
+            uiState.value.includedPeople.add(profile.id)
+        }
     }
 
     fun createExpense(popUp: () -> Unit) {
