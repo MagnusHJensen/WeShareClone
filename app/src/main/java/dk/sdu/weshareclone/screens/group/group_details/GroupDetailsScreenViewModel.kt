@@ -80,8 +80,11 @@ class GroupDetailsScreenViewModel @Inject constructor(
             it.creator == accountService.currentUserId
         }
 
-        val moneyOwed = ownExpenses.sumOf {
-            it.amount - (it.amount / it.peopleSplit.keys.size)
+        val moneyOwed = ownExpenses.filterNot {
+            it.peopleSplit.values.all { paid -> paid }// Filter out all paid expenses
+        }.sumOf {
+            val amountPaid = it.peopleSplit.entries.filter { entry -> entry.value && entry.key != accountService.currentUserId }.size
+            it.amount - (it.amount / it.peopleSplit.keys.size) - (if (amountPaid > 0) it.amount / amountPaid else 0)
         }
 
         return moneyOwed
@@ -91,7 +94,7 @@ class GroupDetailsScreenViewModel @Inject constructor(
         val notOwnExpenses = expenses.filter {
             it.creator != accountService.currentUserId // Not owner
                     && it.peopleSplit.containsKey(accountService.currentUserId) // Included in the people split
-                    && !it.peopleSplit[accountService.currentUserId]!! // Has not paid yet.
+                    && it.peopleSplit[accountService.currentUserId] == false // Has not paid yet.
         }
 
         val moneyOws = notOwnExpenses.sumOf {
