@@ -7,5 +7,9 @@ data class ViewExpenseUiState(
     val total: Int = 0,
     val equalSplit: Int = 0,
     val creator: Profile? = null,
-    val peopleSplit: Map<Profile, Boolean> = emptyMap() // Map of included users and a boolean value to show if you're the owner, wether or not they have åaod-
+    val isOwner: Boolean = false,
+    val isPaid: Boolean = false,
+    val peopleSplit: Map<Profile, Boolean> = emptyMap(), // Map of included users and a boolean value to show if you're the owner, wether or not they have paid.
+
+    val isPaying: Boolean = false // Loading and disabling the button
 ) 
