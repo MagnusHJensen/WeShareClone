@@ -44,7 +44,9 @@ class ProfileServiceImpl @Inject constructor(
             if (it.isSuccessful) {
                 val token = it.result
                 token?.let {token ->
-                    updateNotificationToken(accountService.currentUserId, token)
+                    if (accountService.currentUserId.isNotEmpty()) {
+                        updateNotificationToken(accountService.currentUserId, token)
+                    }
                 }
             }
         }
