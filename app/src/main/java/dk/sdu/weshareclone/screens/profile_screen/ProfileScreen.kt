@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +19,7 @@ import dk.sdu.weshareclone.HOME_SCREEN
 import dk.sdu.weshareclone.ui.theme.WeShareTheme
 
 @Composable
-fun ProfileScreen(openScreen: (String) -> Unit, viewModel: ProfileViewModel = hiltViewModel()) {
+fun ProfileScreen(restartApp: (String) -> Unit, openScreen: (String) -> Unit, viewModel: ProfileViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState
 
     ProfileScreenContent(
@@ -27,7 +28,8 @@ fun ProfileScreen(openScreen: (String) -> Unit, viewModel: ProfileViewModel = hi
         onNameChange = viewModel::onNameChange,
         onEmailChange = viewModel::onEmailChange,
         onNameUpdate =  viewModel::onUpdateName,
-        onEmailUpdate = viewModel::onUpdateEmail
+        onEmailUpdate = viewModel::onUpdateEmail,
+        onSignOutClick = {viewModel.onSignOutClick(restartApp) }
     )
 }
 
@@ -38,7 +40,8 @@ fun ProfileScreenContent(
     onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onNameUpdate: () -> Unit,
-    onEmailUpdate: () -> Unit
+    onEmailUpdate: () -> Unit,
+    onSignOutClick: () -> Unit
 ) {
     Column {
         Text(text = "Current name:")
@@ -46,15 +49,20 @@ fun ProfileScreenContent(
         Text(text = "Current email:")
         TextField(value = uiState.email, onValueChange = onEmailChange)
 
-        Row {
-            Button(onClick = onNameUpdate) {
-                Text(text = "Update name")
+        Column {
+            Row {
+                Button(onClick = onNameUpdate) {
+                    Text(text = "Update name")
+                }
+                Button(onClick = onEmailUpdate) {
+                    Text(text = "Update email")
+                }
+                Button(onClick = { openScreen(HOME_SCREEN) }) {
+                    Text(text = "Back")
+                }
             }
-            Button(onClick = onEmailUpdate) {
-                Text(text = "Update email")
-            }
-            Button(onClick = { openScreen(HOME_SCREEN) }) {
-                Text(text = "Back")
+            TextButton(onClick = onSignOutClick) {
+                Text(text = "Sign out", color = Color.Red)
             }
         }
     }

@@ -13,12 +13,14 @@ class WeShareAppState(
     }
 
     fun navigate(route: String) {
+        if (navController.currentDestination?.route == route) return
         navController.navigate(route) {
             launchSingleTop = true
         }
     }
 
     fun navigateAndPopUp(route: String, popUp: String) {
+        if (navController.currentDestination?.route == route) return
         navController.navigate(route) {
             launchSingleTop = true
             popUpTo(popUp) { inclusive = false }
@@ -27,6 +29,8 @@ class WeShareAppState(
     }
 
     fun clearAndNavigate(route: String) {
+        if (navController.currentDestination?.route == route) return
+
         navController.navigate(route) {
             launchSingleTop = true
             popUpTo(0) { inclusive = true }

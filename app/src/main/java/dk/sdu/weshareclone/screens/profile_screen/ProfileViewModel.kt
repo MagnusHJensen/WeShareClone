@@ -2,6 +2,7 @@ package dk.sdu.weshareclone.screens.profile_screen
 
 import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dk.sdu.weshareclone.LOGIN_SCREEN
 import dk.sdu.weshareclone.model.service.AccountService
 import dk.sdu.weshareclone.model.service.ProfileService
 import dk.sdu.weshareclone.screens.WeShareViewModel
@@ -43,5 +44,12 @@ class ProfileViewModel @Inject constructor(private val profileService: ProfileSe
     }
     fun onUpdateEmail() {
         launchCatching { profileService.updateEmail(email) }
+    }
+
+    fun onSignOutClick(restartApp: (String) -> Unit) {
+        launchCatching {
+            accountService.signOut()
+            restartApp(LOGIN_SCREEN)
+        }
     }
 }

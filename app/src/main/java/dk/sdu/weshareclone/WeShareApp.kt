@@ -1,13 +1,32 @@
 package dk.sdu.weshareclone
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.Groups
+import androidx.compose.material.icons.rounded.ManageAccounts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dk.sdu.weshareclone.screens.create_expense_screen.CreateExpenseScreen
@@ -29,10 +48,52 @@ fun WeShareApp() {
     WeShareTheme {
         Surface(color = MaterialTheme.colors.background) {
             val appState = rememberAppState()
+            val bottomBarState = rememberSaveable { mutableStateOf(true) }
 
-            // TODO: Add tab bar
-            NavHost(navController = appState.navController, startDestination = LOGIN_SCREEN) {
-                weShareGraph(appState)
+            when (appState.navController.currentBackStackEntryAsState().value?.destination?.route) {
+                LOGIN_SCREEN -> bottomBarState.value = false
+                PICK_NAME_SCREEN -> bottomBarState.value = false
+                else -> bottomBarState.value = true
+            }
+
+            Scaffold(
+                bottomBar = {
+                    if (bottomBarState.value) {
+                        BottomAppBar {
+                            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp, 0.dp)) {
+                                IconButton(onClick = { appState.clearAndNavigate(HOME_SCREEN) }) {
+                                    Icon(Icons.Rounded.Groups, contentDescription = null)
+                                }
+                                IconButton(onClick = {  }, enabled = false) { // TODO: Add shortcut for adding expense.
+                                    Icon(Icons.Rounded.AddCircle, contentDescription = null)
+                                }
+                                IconButton(onClick = { appState.clearAndNavigate(PROFILE_SCREEN) }) {
+                                    Icon(Icons.Rounded.ManageAccounts, contentDescription = null)
+                                }
+                            }
+                        }
+                    }
+                }
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier.padding(
+                        PaddingValues(
+                            0.dp,
+                            0.dp,
+                            0.dp,
+                            innerPadding.calculateBottomPadding()
+                        )
+                    )
+                ) {
+                    NavHost(
+                        navController = appState.navController,
+                        startDestination = LOGIN_SCREEN
+                    ) {
+                        weShareGraph(appState)
+                    }
+                }
             }
 
         }
@@ -54,7 +115,6 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
 
     composable(HOME_SCREEN) {
         HomeScreen(
-            restartApp = { route -> appState.clearAndNavigate(route) },
             openScreen = { route -> appState.navigate(route) },
             openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp)})
     }
@@ -92,7 +152,10 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
     }
 
     composable(PROFILE_SCREEN) {
-        ProfileScreen(openScreen = { route -> appState.navigate(route) })
+        ProfileScreen(
+            restartApp = { route -> appState.clearAndNavigate(route) },
+            openScreen = { route -> appState.navigate(route) }
+        )
     }
 
     composable(

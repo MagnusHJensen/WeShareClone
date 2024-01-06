@@ -4,7 +4,6 @@ import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dk.sdu.weshareclone.GROUP_SCREEN
 import dk.sdu.weshareclone.HOME_SCREEN
-import dk.sdu.weshareclone.LOGIN_SCREEN
 import dk.sdu.weshareclone.PROFILE_SCREEN
 import dk.sdu.weshareclone.model.Group
 import dk.sdu.weshareclone.model.service.AccountService
@@ -27,12 +26,6 @@ class HomeScreenViewModel @Inject constructor(
 
     val groups = mutableStateOf(emptyList<Group>())
 
-    fun onSignOutClick(restartApp: (String) -> Unit) {
-        launchCatching {
-            accountService.signOut()
-            restartApp(LOGIN_SCREEN)
-        }
-    }
 
     fun fetchGroups() {
         launchCatching {
