@@ -71,12 +71,15 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.30.1")
     implementation("com.google.dagger:hilt-android:2.47")
     ksp("com.google.dagger:hilt-compiler:2.47")
+    implementation("com.google.accompanist:accompanist-permissions:0.30.1")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.firebase:firebase-functions")
 
 
     // Test

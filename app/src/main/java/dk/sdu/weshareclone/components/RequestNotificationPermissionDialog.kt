@@ -1,0 +1,40 @@
+package dk.sdu.weshareclone.components
+
+import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestNotificationPermissionDialog() {
+    val permissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    val openDialog = remember { mutableStateOf(true) }
+
+    if (!permissionState.status.isGranted && openDialog.value) {
+        AlertDialog(
+            onDismissRequest = { openDialog.value = false },
+            dismissButton = {
+                TextButton(onClick = { openDialog.value = false }) {
+                    Text(text = "Dismiss")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    permissionState.launchPermissionRequest()
+                    openDialog.value = false
+                }) {
+                    Text(text = "Confirm")
+                }
+            })
+    }
+}

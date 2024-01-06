@@ -1,12 +1,9 @@
 package dk.sdu.weshareclone.model.service.impl
 
-import android.content.ContentValues.TAG
-import android.nfc.Tag
-import android.util.Log
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.dataObjects
+import com.google.firebase.messaging.FirebaseMessaging
 import dk.sdu.weshareclone.model.Profile
 import dk.sdu.weshareclone.model.service.AccountService
 import dk.sdu.weshareclone.model.service.ProfileService
@@ -20,6 +17,7 @@ import javax.inject.Inject
 
 class ProfileServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
+    messaging: FirebaseMessaging,
     private val accountService: AccountService
 ) : ProfileService {
 
@@ -41,6 +39,23 @@ class ProfileServiceImpl @Inject constructor(
                 }
             }
 
+    init {
+        messaging.token.addOnCompleteListener {
+            if (it.isSuccessful) {
+                val token = it.result
+                token?.let {token ->
+                    updateNotificationToken(accountService.currentUserId, token)
+                }
+            }
+        }
+    }
+
+    private fun updateNotificationToken(userId: String, token: String) {
+        val userTokenMap = mapOf("notificationToken" to token)
+
+        firestore.collection(PROFILE_COLLECTION).document(userId).set(userTokenMap, SetOptions.merge())
+    }
+
     override suspend fun updateName(newName: String) {
         var currentProfile = profile.first()
         currentProfile =
@@ -53,11 +68,9 @@ class ProfileServiceImpl @Inject constructor(
     override suspend fun updateEmail(newEmail: String) {
         var currentProfile = profile.first()
         currentProfile =
-            currentProfile?.copy(email = newEmail) ?: Profile(accountService.currentUserId, newEmail)
+            currentProfile?.copy(email = newEmail) ?: Profile(id = accountService.currentUserId, email = newEmail)
 
         firestore.collection(PROFILE_COLLECTION).document(currentProfile.id).set(currentProfile).await()
-        //TODO: Make sure not include actual footage of the emails in the system.
-        // We are working with 2 different emails, an on display one and one for the firebase auth. IMPORTANT DISTINCTION
     }
 
     override suspend fun createProfile(email: String) {

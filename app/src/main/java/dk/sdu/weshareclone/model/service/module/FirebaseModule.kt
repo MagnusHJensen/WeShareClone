@@ -7,6 +7,8 @@ import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.ktx.messaging
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,4 +27,6 @@ object FirebaseModule {
         firestore.firestoreSettings = settings
         return firestore;
     }
+
+    @Provides fun messaging(): FirebaseMessaging = Firebase.messaging
 }

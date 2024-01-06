@@ -1,5 +1,6 @@
 package dk.sdu.weshareclone.screens.home_screen
 
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import dk.sdu.weshareclone.CREATE_GROUP_SCREEN
 import dk.sdu.weshareclone.GROUP_ID
 import dk.sdu.weshareclone.GROUP_SCREEN
 import dk.sdu.weshareclone.PROFILE_SCREEN
+import dk.sdu.weshareclone.components.RequestNotificationPermissionDialog
 import dk.sdu.weshareclone.model.Group
 import dk.sdu.weshareclone.ui.theme.WeShareTheme
 
@@ -56,6 +58,9 @@ fun HomeScreenContent(
     openScreen: (String) -> Unit,
     onInspectProfile: () -> Unit
 ) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        RequestNotificationPermissionDialog()
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize(),
