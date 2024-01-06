@@ -99,7 +99,7 @@ fun ExpenseCard(
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(text = it.name)
-                                if (uiState.isOwner && it.id != uiState.creator?.id) {
+                                if (uiState.isOwner && it.id != uiState.creator?.id && uiState.peopleSplit[it] == false) { // Don't show on owner or people that have already paid.
                                     IconButton(onClick = {
                                         sendNotification(it.notificationToken)
                                         Toast.makeText(
