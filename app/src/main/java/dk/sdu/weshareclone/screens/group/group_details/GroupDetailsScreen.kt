@@ -70,8 +70,6 @@ fun GroupDetailsScreenContent(
             fontSize = TextUnit(5.0F, TextUnitType.Em)
         )
         BalanceSection(uiState = uiState)
-        // TODO: Add non-paid expenses.
-        // TODO: Add function to show already paid expenses
         LazyColumn {
             items(uiState.groupMembers, key = { it.id }) { groupMember ->
                 Box(modifier = Modifier.fillMaxWidth()) {
@@ -79,7 +77,7 @@ fun GroupDetailsScreenContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = groupMember.name)
-                        if (isOwner) {
+                        if (isOwner && groupMember.id != uiState.group?.owner) {
                             IconButton(onClick = { /*TODO*/ }) {
                                 Icon(Icons.Filled.Delete, contentDescription = null)
                             }
@@ -89,7 +87,7 @@ fun GroupDetailsScreenContent(
 
             }
         }
-        Row {
+        Row(modifier = Modifier.fillMaxWidth(0.9F), horizontalArrangement = Arrangement.SpaceEvenly) {
             Button(onClick = onCreateExpenseClick, enabled = uiState.groupMembers.size > 1) {
                 Text(text = "Add expense")
             }
@@ -151,6 +149,6 @@ fun GroupDetailsScreenPreview() {
             ),
             groupMembers = listOf(Profile(name = "Homer")),
             amountOwed = 100
-        ), isOwner = false, popUp = {}, openScreen = {}, onCreateExpenseClick = {}, onViewExpenseClick = {})
+        ), isOwner = true, popUp = {}, openScreen = {}, onCreateExpenseClick = {}, onViewExpenseClick = {})
     }
 }
