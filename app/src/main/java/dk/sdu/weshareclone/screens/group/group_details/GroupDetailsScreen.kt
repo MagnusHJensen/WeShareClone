@@ -44,6 +44,8 @@ fun GroupScreen(
     val isOwner by viewModel.isOwner
     GroupDetailsScreenContent(uiState = uiState, isOwner = isOwner, popUp = popUp, openScreen = openScreen, onCreateExpenseClick = {
         viewModel.onCreateExpenseClick(openAndPopUp)
+    }, onViewExpenseClick = {
+        viewModel.onViewExpenseClick(it, openAndPopUp)
     })
 }
 
@@ -53,7 +55,8 @@ fun GroupDetailsScreenContent(
     isOwner: Boolean,
     popUp: () -> Unit,
     openScreen: (String) -> Unit,
-    onCreateExpenseClick: () -> Unit
+    onCreateExpenseClick: () -> Unit,
+    onViewExpenseClick: (String) -> Unit
 ) {
     Log.d("APP", uiState.group.toString())
     Column(
@@ -100,7 +103,7 @@ fun GroupDetailsScreenContent(
             Text(text = "Non paid expenses")
             LazyColumn {
                 items(uiState.nonPaidExpenses, key = { it.id }) { expense ->
-                    ExpenseItem(expense = expense)
+                    ExpenseItem(expense = expense, navigateToExpense = { onViewExpenseClick(expense.id) })
                 }
             }
         }
@@ -109,7 +112,7 @@ fun GroupDetailsScreenContent(
             Text(text = "My expenses")
             LazyColumn {
                 items(uiState.myExpenses, key = { it.id }) { expense ->
-                    ExpenseItem(expense = expense)
+                    ExpenseItem(expense = expense, navigateToExpense = { onViewExpenseClick(expense.id) })
                 }
             }
         }
@@ -118,7 +121,7 @@ fun GroupDetailsScreenContent(
             Text(text = "Paid expenses")
             LazyColumn {
                 items(uiState.paidExpenses, key = { it.id }) { expense ->
-                    ExpenseItem(expense = expense)
+                    ExpenseItem(expense = expense, navigateToExpense = { onViewExpenseClick(expense.id) })
                 }
             }
         }
@@ -127,8 +130,8 @@ fun GroupDetailsScreenContent(
 }
 
 @Composable
-fun ExpenseItem(expense: GroupExpense) {
-    TextButton(onClick = { /*TODO*/ }) {
+fun ExpenseItem(expense: GroupExpense, navigateToExpense: () -> Unit) {
+    TextButton(onClick = { navigateToExpense() }) {
         Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth(0.8F)) {
             Text(text = expense.creator.name)
             Text(text = "Total: ${expense.amount}")
@@ -148,6 +151,6 @@ fun GroupDetailsScreenPreview() {
             ),
             groupMembers = listOf(Profile(name = "Homer")),
             amountOwed = 100
-        ), isOwner = false, popUp = {}, openScreen = {}, onCreateExpenseClick = {})
+        ), isOwner = false, popUp = {}, openScreen = {}, onCreateExpenseClick = {}, onViewExpenseClick = {})
     }
 }

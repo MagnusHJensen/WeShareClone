@@ -14,6 +14,9 @@ const val GROUP_ID_ARG = "?$GROUP_ID={$GROUP_ID}"
 
 
 const val CREATE_EXPENSE_SCREEN = "CreateExpenseScreen"
+const val VIEW_EXPENSE_SCREEN = "ViewExpenseScreen"
+const val EXPENSE_ID = "expenseId"
+const val EXPENSE_ID_ARG = "?$EXPENSE_ID={$EXPENSE_ID}"
 
 
 const val HOME_SCREEN = "HomeScreen"

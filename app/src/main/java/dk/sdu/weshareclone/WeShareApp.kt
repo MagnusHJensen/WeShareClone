@@ -14,6 +14,7 @@ import dk.sdu.weshareclone.screens.create_expense_screen.CreateExpenseScreen
 import dk.sdu.weshareclone.screens.group.add_member.AddGroupMemberScreen
 import dk.sdu.weshareclone.screens.group.create_group.CreateGroupScreen
 import dk.sdu.weshareclone.screens.group.group_details.GroupScreen
+import dk.sdu.weshareclone.screens.group.view_expense.ViewExpenseScreen
 import dk.sdu.weshareclone.screens.home_screen.HomeScreen
 import dk.sdu.weshareclone.screens.login.LoginSceen
 import dk.sdu.weshareclone.screens.payment_screen.PaymentScreen
@@ -23,6 +24,8 @@ import dk.sdu.weshareclone.ui.theme.WeShareTheme
 
 @Composable
 fun WeShareApp() {
+
+
     WeShareTheme {
         Surface(color = MaterialTheme.colors.background) {
             val appState = rememberAppState()
@@ -100,5 +103,15 @@ fun NavGraphBuilder.weShareGraph(appState: WeShareAppState) {
         })
     ) {
         CreateExpenseScreen(popUp = { appState.popUp() })
+    }
+
+    composable(
+        route = "$VIEW_EXPENSE_SCREEN$EXPENSE_ID_ARG",
+        arguments = listOf(navArgument(EXPENSE_ID) {
+            nullable = true
+            defaultValue = null
+        })
+    ) {
+        ViewExpenseScreen()
     }
 }

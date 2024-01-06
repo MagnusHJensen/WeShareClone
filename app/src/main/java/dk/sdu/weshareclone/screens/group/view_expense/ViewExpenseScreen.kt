@@ -6,8 +6,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,20 +20,29 @@ import dk.sdu.weshareclone.ui.theme.WeShareTheme
 
 @Composable
 fun ViewExpenseScreen(viewModel: ViewExpenseViewModel = hiltViewModel()) {
-
+    val uiState by viewModel.uiState
+    ViewExpenseScreenContent(uiState = uiState, sendNotification = viewModel::sendNotification)
 }
 
 @Composable
-fun ViewExpenseScreenContent() {
+fun ViewExpenseScreenContent(
+    uiState: ViewExpenseUiState,
+    sendNotification: (String) -> Unit
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Reason for expense")
-        Text(text = "Total amount: ${100}")
+        Text(text = uiState.reason)
+        Text(text = "Total amount: ${uiState.total}")
         LazyColumn {
-            items(listOf(1, 2, 3), key = { it }) {
+            items(uiState.peopleSplit.keys.toList(), key = { it.id }) {
                 Row {
-                    Text(text = "Member name")
-                    Text(text = "Amount") // Will be the same for everyone
-                    Checkbox(checked = true, onCheckedChange = null, enabled = false) // Will just be checked, but can not be interacted with.
+                    Text(text = it.name)
+                    Text(text = "Amount to pay: ${uiState.equalSplit}") // Will be the same for everyone
+                    IconButton(onClick = { sendNotification(it.notificationToken) }) {
+                        Icon(Icons.Filled.Notifications, contentDescription = null)
+                    }
+                    if (false) {
+                        Checkbox(checked = true, onCheckedChange = null, enabled = false) // Will just be checked, but can not be interacted with.
+                    }
                 }
             }
         }
@@ -45,6 +59,6 @@ fun ViewExpenseScreenContent() {
 @Preview
 fun ViewExpenseScreenPreview() {
     WeShareTheme {
-        ViewExpenseScreenContent()
+        ViewExpenseScreenContent(uiState = ViewExpenseUiState(), sendNotification = {})
     }
 }

@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dk.sdu.weshareclone.CREATE_EXPENSE_SCREEN
+import dk.sdu.weshareclone.EXPENSE_ID
 import dk.sdu.weshareclone.GROUP_ID
 import dk.sdu.weshareclone.GROUP_SCREEN
+import dk.sdu.weshareclone.VIEW_EXPENSE_SCREEN
 import dk.sdu.weshareclone.model.Expense
 import dk.sdu.weshareclone.model.service.AccountService
 import dk.sdu.weshareclone.model.service.ExpenseService
@@ -102,5 +104,9 @@ class GroupDetailsScreenViewModel @Inject constructor(
         }
 
         return moneyOws
+    }
+
+    fun onViewExpenseClick(expenseId: String, openAndPopUp: (String, String) -> Unit) {
+        openAndPopUp("$VIEW_EXPENSE_SCREEN?$EXPENSE_ID=${expenseId}", "$GROUP_SCREEN?$GROUP_ID=${uiState.value.group?.id}")
     }
 }
