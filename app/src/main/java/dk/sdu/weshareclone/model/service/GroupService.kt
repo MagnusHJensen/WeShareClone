@@ -8,7 +8,7 @@ interface GroupService {
     suspend fun listGroups(): List<Group>
     suspend fun fetchGroup(groupId: String): Group
     suspend fun updateGroup(group: Group)
-    suspend fun leaveGroup()
+    suspend fun removeGroupMember(groupId: String, memberId: String)
     suspend fun fetchGroupMembers(groupId: String): List<Profile>
     suspend fun inviteMember(groupId: String, email: String)
 }

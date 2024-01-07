@@ -17,4 +17,15 @@ data class Group(
 
         memberIds = newMemberIds
     }
+
+    fun removeMember(memberId: String) {
+        val newMemberIds = mutableListOf<String>()
+        memberIds.forEach {
+            if (it != memberId) {
+                newMemberIds.add(it)
+            }
+        }
+
+        memberIds = newMemberIds
+    }
 }

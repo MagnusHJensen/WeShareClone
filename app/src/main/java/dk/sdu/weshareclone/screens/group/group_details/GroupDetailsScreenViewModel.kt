@@ -109,4 +109,16 @@ class GroupDetailsScreenViewModel @Inject constructor(
     fun onViewExpenseClick(expenseId: String, openAndPopUp: (String, String) -> Unit) {
         openAndPopUp("$VIEW_EXPENSE_SCREEN?$EXPENSE_ID=${expenseId}", "$GROUP_SCREEN?$GROUP_ID=${uiState.value.group?.id}")
     }
+
+    fun removeGroupMember(userId: String) {
+        launchCatching {
+            val groupId = uiState.value.group?.id
+            if (groupId != null) {
+                groupService.removeGroupMember(groupId, userId)
+                uiState.value = uiState.value.copy(
+                    group = groupService.fetchGroup(groupId)
+                )
+            }
+        }
+    }
 }

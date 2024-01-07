@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dk.sdu.weshareclone.model.Group
 import dk.sdu.weshareclone.model.Profile
 import dk.sdu.weshareclone.model.service.AccountService
+import dk.sdu.weshareclone.model.service.ExpenseService
 import dk.sdu.weshareclone.model.service.GroupService
 import dk.sdu.weshareclone.model.service.ProfileService
 import kotlinx.coroutines.tasks.await
@@ -13,7 +14,8 @@ import javax.inject.Inject
 class GroupServiceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val profileService: ProfileService,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val expenseService: ExpenseService
 ) : GroupService {
     override suspend fun createGroup(name: String, description: String?, members: List<String>?) {
         val id = UUID.randomUUID().toString()
@@ -48,8 +50,15 @@ class GroupServiceImpl @Inject constructor(
 
     }
 
-    override suspend fun leaveGroup() {
-        TODO("Not yet implemented")
+    override suspend fun removeGroupMember(groupId: String, memberId: String) {
+        val group = fetchGroup(groupId)
+        if (!group.memberIds.contains(memberId) || accountService.currentUserId != group.owner) {
+            return
+        }
+
+        group.removeMember(memberId)
+        updateGroup(group)
+        expenseService.deleteExpenseByUser(groupId, memberId)
     }
 
     override suspend fun fetchGroup(groupId: String): Group {

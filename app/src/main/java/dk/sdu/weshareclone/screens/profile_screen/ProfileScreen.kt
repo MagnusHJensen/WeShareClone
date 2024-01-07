@@ -5,17 +5,20 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import dk.sdu.weshareclone.HOME_SCREEN
 import dk.sdu.weshareclone.ui.theme.WeShareTheme
 
 @Composable
@@ -43,23 +46,23 @@ fun ProfileScreenContent(
     onEmailUpdate: () -> Unit,
     onSignOutClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val isNotificationsEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
+
     Column {
         Text(text = "Current name:")
         TextField(value = uiState.name, onValueChange = onNameChange, singleLine = true, modifier = Modifier.border(border = BorderStroke(width = Dp(1.0F), color = Color.Black)))
         Text(text = "Current email:")
-        TextField(value = uiState.email, onValueChange = onEmailChange)
+        TextField(value = uiState.email, onValueChange = onEmailChange, enabled = false)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Is notifications enabled")
+            Switch(checked = isNotificationsEnabled, onCheckedChange = {})            
+        }
+
 
         Column {
-            Row {
-                Button(onClick = onNameUpdate) {
-                    Text(text = "Update name")
-                }
-                Button(onClick = onEmailUpdate) {
-                    Text(text = "Update email")
-                }
-                Button(onClick = { openScreen(HOME_SCREEN) }) {
-                    Text(text = "Back")
-                }
+            Button(onClick = onNameUpdate) {
+                Text(text = "Update name")
             }
             TextButton(onClick = onSignOutClick) {
                 Text(text = "Sign out", color = Color.Red)

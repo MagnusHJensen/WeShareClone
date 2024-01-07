@@ -42,21 +42,26 @@ fun GroupScreen(
 ) {
     val uiState by viewModel.uiState
     val isOwner by viewModel.isOwner
-    GroupDetailsScreenContent(uiState = uiState, isOwner = isOwner, popUp = popUp, openScreen = openScreen, onCreateExpenseClick = {
-        viewModel.onCreateExpenseClick(openAndPopUp)
-    }, onViewExpenseClick = {
-        viewModel.onViewExpenseClick(it, openAndPopUp)
-    })
+    GroupDetailsScreenContent(
+        uiState = uiState,
+        isOwner = isOwner,
+        openScreen = openScreen,
+        onCreateExpenseClick = {
+            viewModel.onCreateExpenseClick(openAndPopUp)
+        },
+        onViewExpenseClick = {viewModel.onViewExpenseClick(it, openAndPopUp)},
+        removeGroupMember = {viewModel.removeGroupMember(it)}
+    )
 }
 
 @Composable
 fun GroupDetailsScreenContent(
     uiState: GroupDetailsScreenUiState,
     isOwner: Boolean,
-    popUp: () -> Unit,
     openScreen: (String) -> Unit,
     onCreateExpenseClick: () -> Unit,
-    onViewExpenseClick: (String) -> Unit
+    onViewExpenseClick: (String) -> Unit,
+    removeGroupMember: (String) -> Unit
 ) {
     Log.d("APP", uiState.group.toString())
     Column(
@@ -78,7 +83,7 @@ fun GroupDetailsScreenContent(
                     ) {
                         Text(text = groupMember.name)
                         if (isOwner && groupMember.id != uiState.group?.owner) {
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(onClick = { removeGroupMember(groupMember.id) }) {
                                 Icon(Icons.Filled.Delete, contentDescription = null)
                             }
                         }
@@ -149,6 +154,6 @@ fun GroupDetailsScreenPreview() {
             ),
             groupMembers = listOf(Profile(name = "Homer")),
             amountOwed = 100
-        ), isOwner = true, popUp = {}, openScreen = {}, onCreateExpenseClick = {}, onViewExpenseClick = {})
+        ), isOwner = true, openScreen = {}, onCreateExpenseClick = {}, onViewExpenseClick = {}, removeGroupMember = {})
     }
 }

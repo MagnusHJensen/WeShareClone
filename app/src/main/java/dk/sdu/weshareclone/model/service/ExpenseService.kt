@@ -8,5 +8,6 @@ interface ExpenseService {
     suspend fun getExpense(expenseId: String): Expense
     suspend fun payExpense(expenseId: String)
     suspend fun deleteExpense(expenseId: String)
+    suspend fun deleteExpenseByUser(groupId: String, userId: String)
 
 }
