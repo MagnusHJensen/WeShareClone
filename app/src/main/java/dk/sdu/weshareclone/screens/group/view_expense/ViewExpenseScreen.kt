@@ -65,7 +65,7 @@ fun ExpenseCard(
     val context = LocalContext.current
 
     Card(
-        backgroundColor = Color.Green, modifier = Modifier
+        backgroundColor = Color.LightGray, modifier = Modifier
             .fillMaxWidth(0.9F)
             .fillMaxHeight(0.75F)
     ) {

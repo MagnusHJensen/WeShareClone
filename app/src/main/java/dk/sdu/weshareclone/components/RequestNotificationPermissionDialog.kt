@@ -25,7 +25,7 @@ fun RequestNotificationPermissionDialog() {
 
     if (!permissionState.status.isGranted && openDialog.value) {
         AlertDialog(
-            backgroundColor = Color.Red,
+            backgroundColor = Color.LightGray,
             modifier = Modifier.fillMaxSize(0.5F),
             onDismissRequest = { openDialog.value = false },
             dismissButton = {

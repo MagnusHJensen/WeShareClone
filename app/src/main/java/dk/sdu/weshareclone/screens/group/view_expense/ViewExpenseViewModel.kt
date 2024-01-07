@@ -69,7 +69,5 @@ class ViewExpenseViewModel @Inject constructor(
 
             }
         }
-
-
     }
 }
