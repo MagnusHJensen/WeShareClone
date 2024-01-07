@@ -60,14 +60,11 @@ fun WeShareApp() {
                 bottomBar = {
                     if (bottomBarState.value) {
                         BottomAppBar {
-                            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+                            Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp, 0.dp)) {
                                 IconButton(onClick = { appState.clearAndNavigate(HOME_SCREEN) }) {
                                     Icon(Icons.Rounded.Groups, contentDescription = null)
-                                }
-                                IconButton(onClick = {  }, enabled = false) { // TODO: Add shortcut for adding expense.
-                                    Icon(Icons.Rounded.AddCircle, contentDescription = null)
                                 }
                                 IconButton(onClick = { appState.clearAndNavigate(PROFILE_SCREEN) }) {
                                     Icon(Icons.Rounded.ManageAccounts, contentDescription = null)

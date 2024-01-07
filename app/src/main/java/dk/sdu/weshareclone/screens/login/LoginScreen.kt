@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -14,10 +15,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
@@ -48,21 +51,23 @@ fun LoginScreenContent(
     onSignInClick: () -> Unit,
     onCreateClick: () -> Unit
 ) {
-    Column {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         EmailInput(uiState.email, onEmailChange)
         PasswordInput(uiState.password, onPasswordChange)
+        Row {
+            Button(
+                onClick = { onSignInClick() },
+                enabled = uiState.email.isNotEmpty() && uiState.password.isNotEmpty()
+            ) {
+                Text("Sign in")
+            }
+        }
         Row {
             Button(
                 onClick = { onCreateClick() },
                 enabled = uiState.email.isNotEmpty() && uiState.password.isNotEmpty()
             ) {
                 Text("Create account")
-            }
-            Button(
-                onClick = { onSignInClick() },
-                enabled = uiState.email.isNotEmpty() && uiState.password.isNotEmpty()
-            ) {
-                Text("Sign in")
             }
         }
     }

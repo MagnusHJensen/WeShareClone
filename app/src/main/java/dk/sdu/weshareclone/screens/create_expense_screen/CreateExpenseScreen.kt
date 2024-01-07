@@ -3,11 +3,13 @@ package dk.sdu.weshareclone.screens.create_expense_screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +39,7 @@ fun CreateExpenseContent(
     onCheckPerson: (Profile) -> Unit,
     onCreateExpense: () -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    Column(modifier = Modifier.padding(25.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(text = "Create an expense for ${uiState.groupName}")
         InputField(label = "Reason for expense", value = uiState.reason, onValueChange = onReasonChange)
         InputField(label = "Total amount", value = uiState.amount, onValueChange = onAmountChange)

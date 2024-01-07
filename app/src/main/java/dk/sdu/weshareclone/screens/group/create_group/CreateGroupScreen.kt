@@ -2,6 +2,7 @@ package dk.sdu.weshareclone.screens.group.create_group
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +38,7 @@ fun CreateGroupScreenContent(
     onDescriptionChange: (String) -> Unit,
     onCreateGroupClick: () -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(Modifier.padding(25.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(text = "Create a new group", fontSize = TextUnit(5.0F, TextUnitType.Em))
         InputField(label = "Group name", value = name, onValueChange = onNameChange)
         InputField(
